@@ -1,8 +1,8 @@
 package application.other;
 
 import javafx.beans.property.SimpleDoubleProperty;
+import robohound_trajectory.position.Waypoint;
 import javafx.beans.property.DoubleProperty;
-import robohound_trajectory.Waypoint;
 
 public class TableWaypoint {
 	

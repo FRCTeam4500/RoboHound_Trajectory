@@ -20,6 +20,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseButton;
@@ -27,7 +28,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.converter.DoubleStringConverter;
 import robohound_trajectory.RoboHound_Trajectory;
 import robohound_trajectory.RobotMath;
-import robohound_trajectory.Waypoint;
+import robohound_trajectory.position.Waypoint;
 
 public class MainController {
 	
@@ -36,6 +37,7 @@ public class MainController {
 	@FXML Button btnAdd, btnClear, btnDelete;
 	@FXML LineChart<Double, Double> chartXY;
 	@FXML NumberAxis chartXY_X, chartXY_Y;
+	@FXML TextField inputTimestep, inputMaxV, inputMaxA, inputWidth, inputDepth;
 	
 	ObservableList<TableWaypoint> waypointList;
 	ArrayList<Waypoint> waypoints = new ArrayList<>();
@@ -143,12 +145,16 @@ public class MainController {
 	public void updateXYChart() {
 		 ObservableList<XYChart.Series<Double, Double>> posData = chartXY.getData();
 		 posData.clear();
+
+		 double timestep = Double.parseDouble(inputTimestep.getText());
+		 double maxV = Double.parseDouble(inputMaxV.getText());
+		 double maxA = Double.parseDouble(inputMaxA.getText());
 		 
 		 if (!waypointList.isEmpty()) {
 			 if (waypointList.size() > 1) {
 				 Waypoint[] test = new Waypoint[waypoints.size()];
 				 test = waypoints.toArray(test);
-				 XYChart.Series<Double, Double> sourceSeries = SeriesFactory.buildPositionSeries(RoboHound_Trajectory.generateTrajectory(test, .05));
+				 XYChart.Series<Double, Double> sourceSeries = SeriesFactory.buildPositionSeries(RoboHound_Trajectory.generateTrajectory(test, timestep, maxV, maxA));
 				 posData.add(sourceSeries);
 				 
 				 int i = 0;

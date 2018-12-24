@@ -8,7 +8,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import robohound_trajectory.Waypoint;
+import robohound_trajectory.position.Waypoint;
 
 public class Helper {
 	

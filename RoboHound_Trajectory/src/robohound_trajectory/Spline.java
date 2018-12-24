@@ -1,5 +1,7 @@
 package robohound_trajectory;
 
+import robohound_trajectory.position.Waypoint;
+
 public class Spline {
 	
 	double x0, x1, dx0, dx1, Ax, Bx, Cx, Dx;
