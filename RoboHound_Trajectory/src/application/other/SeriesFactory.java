@@ -10,7 +10,6 @@ public class SeriesFactory {
 
         for (int i = 0; i < t.segments.length; i++) {
             XYChart.Data<Double, Double> data = new XYChart.Data<>();
-
             data.setXValue(t.get(i).x);
             data.setYValue(t.get(i).y);
 

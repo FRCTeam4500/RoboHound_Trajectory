@@ -7,20 +7,20 @@ public class Trajectory {
 
         // dt is timestep
         // position is distance of x and y from start
-        public Segment(double dt, double x, double y, double position, double velocity, double acceleration, double jerk, double heading) {
+        public Segment(double dt, double x, double y, double heading) {
             this.dt = dt;
             this.x = x;
             this.y = y;
-            this.position = position;
-            this.velocity = velocity;
-            this.acceleration = acceleration;
-            this.jerk = jerk;
+//            this.position = position;
+//            this.velocity = velocity;
+//            this.acceleration = acceleration;
+//            this.jerk = jerk;
             this.heading = heading;
         }
 
-        public Segment copy() {
-            return new Segment(dt, x, y, position, velocity, acceleration, jerk, heading);
-        }
+//        public Segment copy() {
+//            return new Segment(dt, x, y, position, velocity, acceleration, jerk, heading);
+//        }
 
         public boolean equals(Segment seg) {
             return  seg.dt == dt && seg.x == x && seg.y == y &&
@@ -65,11 +65,11 @@ public class Trajectory {
         return segments.length;
     }
 
-    public Trajectory copy() {
-        Trajectory toCopy = new Trajectory(length());
-        for (int i = 0; i < length(); i++) {
-            toCopy.segments[i] = get(i).copy();
-        }
-        return toCopy;
-    }
+//    public Trajectory copy() {
+//        Trajectory toCopy = new Trajectory(length());
+//        for (int i = 0; i < length(); i++) {
+//            toCopy.segments[i] = get(i).copy();
+//        }
+//        return toCopy;
+//    }
 }

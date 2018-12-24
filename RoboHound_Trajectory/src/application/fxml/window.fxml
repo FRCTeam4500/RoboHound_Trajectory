@@ -47,8 +47,8 @@
                                     <HBox prefWidth="200.0" spacing="25.0">
                                        <children>
                                           <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#addClicked" prefWidth="105.0" text="Add" />
-                                          <Button fx:id="btnClear" mnemonicParsing="false" prefWidth="105.0" text="Clear" />
-                                          <Button fx:id="btnDelete" mnemonicParsing="false" prefWidth="105.0" text="Delete" />
+                                          <Button fx:id="btnClear" mnemonicParsing="false" onAction="#clearClicked" prefWidth="105.0" text="Clear" />
+                                          <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#deleteClicked" prefWidth="105.0" text="Delete" />
                                        </children>
                                        <VBox.margin>
                                           <Insets bottom="10.0" />
@@ -72,7 +72,7 @@
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <LineChart fx:id="chartXY" layoutX="-28.0" layoutY="-9.0" prefHeight="600.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <LineChart fx:id="chartXY" animated="false" layoutX="-28.0" layoutY="-9.0" onMouseClicked="#addPointOnClick" prefHeight="600.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <xAxis>
                                         <NumberAxis fx:id="chartXY_X" autoRanging="false" label="X Position (m)" side="BOTTOM" tickUnit="0.5" upperBound="10.0" />
                                       </xAxis>
