@@ -54,7 +54,7 @@
                                                       <Font size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField fx:id="inputTimestep" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="70.0" text="0.02" />
+                                                <TextField fx:id="inputTimestep" maxWidth="-Infinity" minWidth="-Infinity" onAction="#inputChanged" prefWidth="70.0" text="0.02" />
                                              </children>
                                           </HBox>
                                           <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="200.0">
@@ -67,7 +67,7 @@
                                                       <Insets right="10.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <TextField fx:id="inputMaxV" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="70.0" text="0" />
+                                                <TextField fx:id="inputMaxV" maxWidth="-Infinity" minWidth="-Infinity" onAction="#inputChanged" prefWidth="70.0" text="0" />
                                              </children>
                                           </HBox>
                                           <HBox alignment="CENTER" layoutX="10.0" layoutY="50.0" prefHeight="40.0" prefWidth="200.0">
@@ -80,7 +80,7 @@
                                                       <Insets right="10.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <TextField fx:id="inputMaxA" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="70.0" text="0" />
+                                                <TextField fx:id="inputMaxA" maxWidth="-Infinity" minWidth="-Infinity" onAction="#inputChanged" prefWidth="70.0" text="0" />
                                              </children>
                                           </HBox>
                                        </children>
@@ -97,7 +97,7 @@
                                                       <Insets right="10.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <TextField fx:id="inputWidth" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="70.0" text="0" />
+                                                <TextField fx:id="inputWidth" maxWidth="-Infinity" minWidth="-Infinity" onAction="#inputChanged" prefWidth="70.0" text="0" />
                                              </children>
                                           </HBox>
                                           <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="200.0">
@@ -110,7 +110,7 @@
                                                       <Insets right="10.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <TextField fx:id="inputDepth" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="70.0" text="0" />
+                                                <TextField fx:id="inputDepth" maxWidth="-Infinity" minWidth="-Infinity" onAction="#inputChanged" prefWidth="70.0" text="0" />
                                              </children>
                                           </HBox>
                                        </children>
@@ -171,7 +171,17 @@
                       </Tab>
                       <Tab text="Velocity">
                         <content>
-                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <LineChart fx:id="chartVT" animated="false" prefHeight="600.0" prefWidth="600.0">
+                                       <xAxis>
+                                          <NumberAxis fx:id="chartVT_T" autoRanging="false" label="Time (s)" side="BOTTOM" tickUnit="1.0" upperBound="15.0" />
+                                       </xAxis>
+                                       <yAxis>
+                                          <NumberAxis fx:id="chartVT_V" autoRanging="false" label="Velocity (m/s)" side="LEFT" tickUnit="1.0" upperBound="0.0" />
+                                       </yAxis>
+                                    </LineChart>
+                                 </children></AnchorPane>
                         </content>
                       </Tab>
                     </tabs>

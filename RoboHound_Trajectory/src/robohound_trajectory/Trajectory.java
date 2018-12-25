@@ -7,13 +7,13 @@ public class Trajectory {
 
         // dt is timestep
         // position is distance of x and y from start
-        public Segment(double dt, double x, double y, double heading) {
+        public Segment(double dt, double x, double y, double heading, double velocity, double acceleration) {
             this.dt = dt;
             this.x = x;
             this.y = y;
 //            this.position = position;
-//            this.velocity = velocity;
-//            this.acceleration = acceleration;
+            this.velocity = velocity;
+            this.acceleration = acceleration;
 //            this.jerk = jerk;
             this.heading = heading;
         }
@@ -48,9 +48,11 @@ public class Trajectory {
     }
 
     public Segment[] segments;
+    public TrapezoidalProfile profile;
 
-    public Trajectory(Segment[] segments) {
+    public Trajectory(Segment[] segments, TrapezoidalProfile profile) {
         this.segments = segments;
+        this.profile = profile;
     }
 
     public Trajectory(int length) {
@@ -60,7 +62,7 @@ public class Trajectory {
     public Segment get(int index) {
         return segments[index];
     }
-
+  
     public int length() {
         return segments.length;
     }

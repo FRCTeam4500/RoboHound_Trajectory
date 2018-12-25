@@ -23,11 +23,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.util.converter.DoubleStringConverter;
 import robohound_trajectory.RoboHound_Trajectory;
 import robohound_trajectory.RobotMath;
+import robohound_trajectory.Trajectory;
 import robohound_trajectory.position.Waypoint;
 
 public class MainController {
@@ -35,8 +37,8 @@ public class MainController {
 	@FXML TableView<TableWaypoint> waypointTable;
 	@FXML TableColumn<TableWaypoint, Double> waypointX, waypointY, waypointAngle;
 	@FXML Button btnAdd, btnClear, btnDelete;
-	@FXML LineChart<Double, Double> chartXY;
-	@FXML NumberAxis chartXY_X, chartXY_Y;
+	@FXML LineChart<Double, Double> chartXY, chartVT;
+	@FXML NumberAxis chartXY_X, chartXY_Y, chartVT_V, chartVT_T;
 	@FXML TextField inputTimestep, inputMaxV, inputMaxA, inputWidth, inputDepth;
 	
 	ObservableList<TableWaypoint> waypointList;
@@ -53,6 +55,7 @@ public class MainController {
 	                ((TableWaypoint) t.getTableView().getItems().get(t.getTablePosition().getRow())).setX(t.getNewValue());
 	                waypoints.get(t.getTablePosition().getRow()).getTranslation().setX(t.getNewValue());
 	                updateXYChart();
+	                updateVTChart();
 	            });
 		
 		waypointY.setCellValueFactory(new PropertyValueFactory<>("y"));
@@ -63,6 +66,7 @@ public class MainController {
 	                t.getTablePosition().getRow();
 	                waypoints.get(t.getTablePosition().getRow()).getTranslation().setY(t.getNewValue());
 	                updateXYChart();
+	                updateVTChart();
 	            });
 		
 		waypointAngle.setCellValueFactory(new PropertyValueFactory<>("angle"));
@@ -72,6 +76,7 @@ public class MainController {
 	                ((TableWaypoint) t.getTableView().getItems().get(t.getTablePosition().getRow())).setAngle(t.getNewValue());
 	                waypoints.get(t.getTablePosition().getRow()).getRotation().setHeading(t.getNewValue());
 	                updateXYChart();
+	                updateVTChart();
 	            });
 		
 		waypointTable.setItems(waypointList);
@@ -84,6 +89,7 @@ public class MainController {
 			waypointList.add(new TableWaypoint(pos));
 			waypoints.add(pos);
 			updateXYChart();
+			updateVTChart();
 		}
 	}
 	
@@ -93,6 +99,7 @@ public class MainController {
 		waypointList.remove(selected);
 		waypoints.remove(selected);
 		updateXYChart();
+		updateVTChart();
 	}
 	
 	public void clearClicked() {
@@ -109,8 +116,14 @@ public class MainController {
                 waypointList.clear();
                 waypoints.clear();
                 updateXYChart();
+                updateVTChart();
             }
         });
+	}
+	
+	public void inputChanged() {
+		updateXYChart();
+		updateVTChart();
 	}
 	
 	public void addPointOnClick(MouseEvent event) {
@@ -135,6 +148,7 @@ public class MainController {
                  waypointList.add(new TableWaypoint(new Waypoint(x, y, angle)));
                  waypoints.add(new Waypoint(x, y, angle));
                  updateXYChart();
+                 updateVTChart();
              }
 //             if (!currentTrajValid) {
 //                 waypointList.remove(waypointList.size() - 1);
@@ -154,25 +168,45 @@ public class MainController {
 			 if (waypointList.size() > 1) {
 				 Waypoint[] test = new Waypoint[waypoints.size()];
 				 test = waypoints.toArray(test);
-				 XYChart.Series<Double, Double> sourceSeries = SeriesFactory.buildPositionSeries(RoboHound_Trajectory.generateTrajectory(test, timestep, maxV, maxA));
+				 Trajectory traj = RoboHound_Trajectory.generateTrajectory(test, timestep, maxV, maxA);
+				 XYChart.Series<Double, Double> sourceSeries = SeriesFactory.buildPositionSeries(traj);
 				 posData.add(sourceSeries);
 				 
+				 int waypointLength = (int) Math.ceil(traj.profile.getTFinal() / timestep);
 				 int i = 0;
 				 for (XYChart.Data<Double, Double> data : sourceSeries.getData()) {
-					 if (!(i % 20 == 0)) {
+					 if (!((i+1) % waypointLength == 0 || i == 0)) {
 						 data.getNode().setVisible(false);
 					 }
-					 if (i == 0) {
-						 i+=2;
-					 } else {
-						 i++;
-					 }
+					 i++;
 				 }
 				 //flSeries.getNode().setStyle("-fx-stroke: blue");
                  //frSeries = SeriesFactory.buildPositionSeries(backend.getFrontRightTrajectory());
 			 }
 		 }
 
+	}
+	
+	public void updateVTChart() {
+		chartVT.getData().clear();
+		
+		double timestep = Double.parseDouble(inputTimestep.getText());
+		double maxV = Double.parseDouble(inputMaxV.getText());
+		double maxA = Double.parseDouble(inputMaxA.getText());
+		
+		if (waypointList.size() > 1) {
+			Waypoint[] test = new Waypoint[waypoints.size()];
+			test = waypoints.toArray(test);
+			Trajectory traj = RoboHound_Trajectory.generateTrajectory(test, timestep, maxV, maxA);
+			
+			chartVT_T.setUpperBound(traj.profile.getTFinal());
+			chartVT_V.setUpperBound(maxV);
+			//chartVT.setScaleY(maxV + 1);
+			//chartVT.setScaleX(traj.profile.getTFinal() + 1);
+			
+			XYChart.Series<Double, Double> sourceSeries = SeriesFactory.buildVelocitySeries(traj);
+			chartVT.getData().add(sourceSeries);
+		}
 	}
 	
 }

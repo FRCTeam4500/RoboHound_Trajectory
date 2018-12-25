@@ -17,4 +17,18 @@ public class SeriesFactory {
         }
         return series;
     }
+	
+	public static XYChart.Series<Double, Double> buildVelocitySeries(Trajectory t) {
+        XYChart.Series<Double, Double> series = new XYChart.Series<>();
+
+        for (int i = 0; i < t.segments.length; i++) {
+            XYChart.Data<Double, Double> data = new XYChart.Data<>();
+
+            data.setXValue(t.get(i).dt * i);
+            data.setYValue(t.get(i).velocity);
+
+            series.getData().add(data);
+        }
+        return series;
+    }
 }

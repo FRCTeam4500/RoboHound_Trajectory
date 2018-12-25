@@ -12,16 +12,19 @@ public class RoboHound_Trajectory {
 		int waypointLength = (int) Math.ceil(profile.getTFinal() / timestep);
 		int segmentCount = (waypoints.length-1) * waypointLength;
 		
+		System.out.println("-------------------------------");
 		Trajectory.Segment[] segments = new Trajectory.Segment[segmentCount];
-		System.out.println("Total Size: " + (segmentCount-1));
+		System.out.println("Total Size: " + (segmentCount));
+		System.out.println("Waypoint Size: " + (waypointLength));
 		
 		for (int pt = 1; pt < waypoints.length; pt++) {
 			Spline spline = new Spline(waypoints[pt-1], waypoints[pt]);
 			
-			for (int seg = 0; seg < segmentCount; seg++) {
+			for (int seg = 0; seg < waypointLength; seg++) {
 				double t = timestep*seg;
 				double adjT = RobotMath.timeTransformation(t, profile.getTFinal());
-				segments[(pt-1)*waypointLength+seg] = new Trajectory.Segment(timestep, spline.getX(adjT), spline.getY(adjT), spline.getHeading(adjT));
+				segments[(pt-1)*waypointLength+seg] = new Trajectory.Segment(timestep, spline.getX(adjT), spline.getY(adjT), spline.getHeading(adjT), profile.getVelocity(t), profile.getAcceleration(t));
+				System.out.println((pt-1)*waypointLength+seg);
 			}
 		}
 		
@@ -38,7 +41,7 @@ public class RoboHound_Trajectory {
 //			}
 //			//segments[i-1] = new Trajectory.Segment(dt, spline.getX(dt), spline.getY(dt), waypoints[i-1].getDistance(waypoints[i]), velocity, acceleration, jerk, heading)
 //		}
-		return new Trajectory(segments);
+		return new Trajectory(segments, profile);
 	}
 
 }
