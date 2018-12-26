@@ -2,7 +2,9 @@ package application.other;
 
 import java.util.Optional;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -25,12 +27,12 @@ public class Helper {
 		grid.setPadding(new Insets(20, 150, 10, 10));
 
 		TextField x = new TextField();
-		x.setPromptText("X");
+		x.setText("0.0");
 		TextField y = new TextField();
-		y.setPromptText("Y");
+		y.setText("0.0");
 		TextField angle = new TextField();
-		angle.setPromptText("Angle");
-	
+		angle.setText("0.0");
+		
 		grid.add(new Label("X:"), 0, 0);
 		grid.add(x, 1, 0);
 		grid.add(new Label("Y:"), 0, 1);
@@ -47,12 +49,22 @@ public class Helper {
 		    return null;
 		});
 		
+		repeatFocus(x);
 		Optional<Waypoint> result = dialog.showAndWait();
 
 		if (result.isPresent()) {
 			return result.get();
 		}
 		return null;
+	}
+	
+	private static void repeatFocus(Node node) {
+	    Platform.runLater(() -> {
+	        if (!node.isFocused()) {
+	            node.requestFocus();
+	            repeatFocus(node);
+	        }
+	    });
 	}
 	
 	public static double textToDouble(TextField field) throws NumberFormatException {

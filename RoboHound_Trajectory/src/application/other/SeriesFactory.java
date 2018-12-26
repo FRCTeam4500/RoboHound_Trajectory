@@ -1,7 +1,7 @@
 package application.other;
 
 import javafx.scene.chart.XYChart;
-import robohound_trajectory.Trajectory;
+import robohound_trajectory.generating.Trajectory;
 
 public class SeriesFactory {
 	

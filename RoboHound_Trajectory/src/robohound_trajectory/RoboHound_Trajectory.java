@@ -3,6 +3,9 @@ package robohound_trajectory;
 import java.io.IOException;
 
 import application.other.CSVWriter;
+import robohound_trajectory.generating.MotionProfile;
+import robohound_trajectory.generating.Spline;
+import robohound_trajectory.generating.Trajectory;
 import robohound_trajectory.position.Waypoint;
 
 /**
@@ -45,6 +48,7 @@ public class RoboHound_Trajectory {
 			splines[pt-1] = new Spline(waypoints[pt-1], waypoints[pt]);
 		}
 		double arcLength = Spline.getPathLength(splines);
+		System.out.println(arcLength);
 		
 		MotionProfile profile = new MotionProfile(arcLength, timestep, vMax, aMax);	
 		
@@ -57,7 +61,7 @@ public class RoboHound_Trajectory {
 			for (int seg = 0; seg < waypointLength; seg++) {
 				double t = timestep*seg;
 				double adjT = RobotMath.timeTransformation(t, profile.getFinalTime());
-				segments[(pt-1)*waypointLength+seg] = new Trajectory.Segment(timestep, splines[pt-1].getX(adjT), splines[pt-1].getY(adjT), splines[pt-1].getHeading(adjT), profile.getVelocity(t), profile.getAcceleration(t));
+				segments[(pt-1)*waypointLength+seg] = new Trajectory.Segment(timestep, splines[pt-1].getX(adjT), splines[pt-1].getY(adjT), splines[pt-1].getArcLength(0, adjT), splines[pt-1].getHeading(adjT), profile.getVelocity(t), profile.getAcceleration(t));
 			}
 		}
 		return new Trajectory(segments, profile);
@@ -66,10 +70,10 @@ public class RoboHound_Trajectory {
 	public static void exportToCSV(Trajectory traj, String path) throws IOException {
 		CSVWriter writer = new CSVWriter(path);
 		
-		writer.writeLine(new String[] {"dt", "x", "y", "heading", "velocity", "acceleration"});
+		writer.writeLine(new String[] {"dt", "x", "y", "position", "heading", "velocity", "acceleration"});
 		for (int i = 0; i < traj.length(); i++) {
 			Trajectory.Segment seg = traj.get(i);
-			String[] data = new String[] {String.valueOf(seg.dt), String.valueOf(seg.x), String.valueOf(seg.y), String.valueOf(RobotMath.rad_to_deg(seg.heading)), String.valueOf(seg.velocity), String.valueOf(seg.acceleration)};
+			String[] data = new String[] {RobotMath.truncatedToString(seg.dt), RobotMath.truncatedToString(seg.x), RobotMath.truncatedToString(seg.y), RobotMath.truncatedToString(seg.position), RobotMath.truncatedToString(RobotMath.rad_to_deg(seg.heading)), RobotMath.truncatedToString(seg.velocity), RobotMath.truncatedToString(seg.acceleration)};
 			writer.writeLine(data);
 		}
 		writer.done();

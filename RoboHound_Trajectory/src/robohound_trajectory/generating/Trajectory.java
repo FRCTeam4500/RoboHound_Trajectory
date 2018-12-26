@@ -1,4 +1,4 @@
-package robohound_trajectory;
+package robohound_trajectory.generating;
 
 /**
  * Represents the entire motion the robot will perform<br>
@@ -10,15 +10,16 @@ public class Trajectory {
 	 * Contains the needed information for each point that the robot will follow
 	 */
 	public static class Segment {
-        public double dt, x, y, velocity, acceleration, heading;
+        public double dt, x, y, position, velocity, acceleration, heading;
 
-        public Segment(double dt, double x, double y, double heading, double velocity, double acceleration) {
+        public Segment(double dt, double x, double y, double position, double heading, double velocity, double acceleration) {
             this.dt = dt;
             this.x = x;
             this.y = y;
+            this.position = position;
+            this.heading = heading;
             this.velocity = velocity;
             this.acceleration = acceleration;
-            this.heading = heading;
         }
     }
 

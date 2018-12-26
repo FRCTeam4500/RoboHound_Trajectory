@@ -11,7 +11,7 @@ import application.other.TableWaypoint;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -31,7 +31,7 @@ import javafx.stage.FileChooser;
 import javafx.util.converter.DoubleStringConverter;
 import robohound_trajectory.RoboHound_Trajectory;
 import robohound_trajectory.RobotMath;
-import robohound_trajectory.Trajectory;
+import robohound_trajectory.generating.Trajectory;
 import robohound_trajectory.position.Waypoint;
 
 public class MainController {
@@ -82,6 +82,28 @@ public class MainController {
 	            });
 		
 		waypointTable.setItems(waypointList);
+		
+		Node background = chartXY.lookup(".chart-plot-background");	
+		background.setOnMousePressed((event) -> {
+			double x = RobotMath.roundApprox(chartXY_X.getValueForDisplay(event.getX()).doubleValue(), .5);
+			double y = RobotMath.roundApprox(chartXY_Y.getValueForDisplay(event.getY()).doubleValue(), .5);;
+			
+			double angle = 0;
+	         
+	         if (!waypointList.isEmpty()) {
+	             TableWaypoint prev = waypointList.get(waypointList.size() - 1);
+	             angle = RobotMath.rad_to_deg(Math.atan2(y - prev.getY(), x - prev.getX()));
+	             angle = RobotMath.roundApprox(angle, 45.0);
+	         }
+	         
+	         if (x >= chartXY_X.getLowerBound() && x <= chartXY_X.getUpperBound() &&
+	                 y >= chartXY_Y.getLowerBound() && y <= chartXY_Y.getUpperBound()) {
+	             waypointList.add(new TableWaypoint(new Waypoint(x, y, angle)));
+	             waypoints.add(new Waypoint(x, y, angle));
+	             updateXYChart();
+	             updateVTChart();
+	         }
+		});
 	}
 	
 	public void addClicked() {
@@ -129,33 +151,7 @@ public class MainController {
 		updateXYChart();
 		updateVTChart();
 	}
-	
-	public void addPointOnClick(MouseEvent event) {
-		if (event.getButton() == MouseButton.PRIMARY) {
-			Point2D mouseSceneCoords = new Point2D(event.getSceneX(), event.getSceneY());
-			double xLocal = chartXY_X.sceneToLocal(mouseSceneCoords).getX();
-			double yLocal = chartXY_Y.sceneToLocal(mouseSceneCoords).getY();
-			
-			 double x = RobotMath.round(chartXY_X.getValueForDisplay(xLocal).doubleValue(), 2);
-             double y = RobotMath.round(chartXY_Y.getValueForDisplay(yLocal).doubleValue(), 2);
-             double angle = 0;
-             
-             if (!waypointList.isEmpty()) {
-                 TableWaypoint prev = waypointList.get(waypointList.size() - 1);
-                 angle = RobotMath.rad_to_deg(Math.atan2(y - prev.getY(), x - prev.getX()));
-                 angle = RobotMath.round(angle, 45.0);
-             }
-             
-             if (x >= chartXY_X.getLowerBound() && x <= chartXY_X.getUpperBound() &&
-                     y >= chartXY_Y.getLowerBound() && y <= chartXY_Y.getUpperBound()) {
-                 waypointList.add(new TableWaypoint(new Waypoint(x, y, angle)));
-                 waypoints.add(new Waypoint(x, y, angle));
-                 updateXYChart();
-                 updateVTChart();
-             }
-		}
-	}
-	
+
 	public void exportTrajectory() {
 		 Trajectory traj = createTrajectory();
 		 
@@ -214,8 +210,8 @@ public class MainController {
 			test = waypoints.toArray(test);
 			Trajectory traj = RoboHound_Trajectory.generateTrajectory(test, timestep, maxV, maxA);
 			
-			chartVT_T.setUpperBound(traj.profile.getFinalTime());
-			chartVT_V.setUpperBound(maxV);
+			chartVT_T.setUpperBound(traj.profile.getFinalTime() + .05*traj.profile.getFinalTime());
+			chartVT_V.setUpperBound(maxV + .05*maxV);
 			
 			XYChart.Series<Double, Double> sourceSeries = SeriesFactory.buildVelocitySeries(traj);
 			chartVT.getData().add(sourceSeries);

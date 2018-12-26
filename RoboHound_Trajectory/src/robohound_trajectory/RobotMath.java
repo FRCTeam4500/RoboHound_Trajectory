@@ -21,9 +21,19 @@ public class RobotMath {
      * @param multiple the multiple to round val to
      * @return number rounded to nearest multiple
      */
-	public static double round(double val, double multiple) {
+	public static double roundApprox(double val, double multiple) {
         return Math.round(val / multiple) * multiple;
     }
+	
+	public static double roundTruncate(double val, double n) {
+		int trimmedInt = (int) (val*Math.pow(10, n));
+		double truncated = trimmedInt / Math.pow(10, n);
+		return truncated;
+	}
+	
+	public static String truncatedToString(double num) {
+		return String.valueOf(roundTruncate(num, 5));
+	}
 	
 	/**
 	 * Converts a time (t) on the range [0, tFinal] to [0, 1] 

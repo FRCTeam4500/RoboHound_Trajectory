@@ -1,4 +1,4 @@
-package robohound_trajectory;
+package robohound_trajectory.generating;
 
 /**
  * Generates the trapezoidal (or triangular) motion profile and allows you to find the velocity and acceleration at a given time.
@@ -6,6 +6,10 @@ package robohound_trajectory;
  * a triangular profile is used instead and vMax will change accordingly
  */
 public class MotionProfile {
+	
+	// 0 0 0
+	// 5 0 0
+	// 7 2 20
 	
 	private double t0 = 0, t1, t2, t3, d1, d2, d3;
 	private double distance, vMax, aMax;

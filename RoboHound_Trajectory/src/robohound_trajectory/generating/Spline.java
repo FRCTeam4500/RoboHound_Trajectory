@@ -1,5 +1,6 @@
-package robohound_trajectory;
+package robohound_trajectory.generating;
 
+import robohound_trajectory.RobotMath;
 import robohound_trajectory.position.Waypoint;
 
 /**
@@ -79,25 +80,27 @@ public class Spline {
 		return 3*Ay*t*t+2*By*t+Cy;
 	}
 	
+	
 	/**
 	 * @param t time
 	 * @return angle the wheels should be facing at a given time
 	 */
+	private double n = 500;
 	public double getHeading(double t) {
 		double headingX = getDx(t);
 		double headingY = getDy(t);
 		return Math.atan2(headingY, headingX);
 	}
 	
-	
-	private double n = 100;
-	public double getArcLength() {
+	public double getArcLength(double a, double b) {
+		double deltaX = (b-a) / n;
+		double xOf0 = getTrapezoidSum(a);
+		double xOfn = getTrapezoidSum(a+100*deltaX);
 		double sum = 0;
-		for (int i = 1; i <= n; i++) {
-			sum += (i/n - (i-1)/n) * ((getTrapezoidSum((i-1)/n) + getTrapezoidSum(i/n)) / 2);
-					
+		for(int i = 0; i < n; i++) {
+			sum += 2*(getTrapezoidSum(a+i*deltaX));
 		}
-		return sum;
+		return deltaX/2 * (xOf0 + sum + xOfn);
 	}
 	
 	private double getTrapezoidSum(double t) {
@@ -107,7 +110,7 @@ public class Spline {
 	public static double getPathLength(Spline[] splines) {
 		double sum = 0;
 		for (Spline spline : splines) {
-			sum += spline.getArcLength();
+			sum += spline.getArcLength(0, 1);
 		}
 		return sum;
 	}
