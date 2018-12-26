@@ -1,5 +1,8 @@
 package robohound_trajectory;
 
+import java.io.IOException;
+
+import application.other.CSVWriter;
 import robohound_trajectory.position.Waypoint;
 
 /**
@@ -36,6 +39,23 @@ public class RoboHound_Trajectory {
 			}
 		}
 		return new Trajectory(segments, profile);
+	}
+	
+	public static void exportToCSV(Trajectory traj, String path) throws IOException {
+		CSVWriter writer = new CSVWriter(path);
+		
+		writer.writeLine(new String[] {"dt", "x", "y", "heading", "velocity", "acceleration"});
+		for (int i = 0; i < traj.length(); i++) {
+			Trajectory.Segment seg = traj.get(i);
+			String[] data = new String[] {String.valueOf(seg.dt), String.valueOf(seg.x), String.valueOf(seg.y), String.valueOf(seg.heading), String.valueOf(seg.velocity), String.valueOf(seg.acceleration)};
+			writer.writeLine(data);
+		}
+		writer.done();
+	}
+	
+	public static void exportToCSV(Waypoint[] waypoints, double timestep, double vMax, double aMax, String path) throws IOException {
+		Trajectory traj = generateTrajectory(waypoints, timestep, vMax, aMax);
+		exportToCSV(traj, path);
 	}
 
 }

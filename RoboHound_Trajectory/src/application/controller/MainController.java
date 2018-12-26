@@ -1,5 +1,7 @@
 package application.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -23,9 +25,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import javafx.util.converter.DoubleStringConverter;
 import robohound_trajectory.RoboHound_Trajectory;
 import robohound_trajectory.RobotMath;
@@ -141,7 +143,6 @@ public class MainController {
              if (!waypointList.isEmpty()) {
                  TableWaypoint prev = waypointList.get(waypointList.size() - 1);
                  angle = RobotMath.rad_to_deg(Math.atan2(y - prev.getY(), x - prev.getX()));
-                 //angle = RobotMath.deg_to_rad(RobotMath.round(angle, 45.0));
                  angle = RobotMath.round(angle, 45.0);
              }
              
@@ -152,9 +153,23 @@ public class MainController {
                  updateXYChart();
                  updateVTChart();
              }
-//             if (!currentTrajValid) {
-//                 waypointList.remove(waypointList.size() - 1);
-//             }
+		}
+	}
+	
+	public void exportTrajectory() {
+		 Trajectory traj = createTrajectory();
+		 
+		 FileChooser fileChooser = new FileChooser();
+		 fileChooser.setTitle("Export");
+		 fileChooser.getExtensionFilters().addAll(
+	                new FileChooser.ExtensionFilter("Comma Separated Values", "*.csv"));
+		 
+         File result = fileChooser.showSaveDialog(waypointTable.getScene().getWindow());
+		 
+		 try {
+			RoboHound_Trajectory.exportToCSV(traj, result.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -182,8 +197,6 @@ public class MainController {
 					 }
 					 i++;
 				 }
-				 //flSeries.getNode().setStyle("-fx-stroke: blue");
-                 //frSeries = SeriesFactory.buildPositionSeries(backend.getFrontRightTrajectory());
 			 }
 		 }
 
@@ -203,12 +216,21 @@ public class MainController {
 			
 			chartVT_T.setUpperBound(traj.profile.getFinalTime());
 			chartVT_V.setUpperBound(maxV);
-			//chartVT.setScaleY(maxV + 1);
-			//chartVT.setScaleX(traj.profile.getTFinal() + 1);
 			
 			XYChart.Series<Double, Double> sourceSeries = SeriesFactory.buildVelocitySeries(traj);
 			chartVT.getData().add(sourceSeries);
 		}
+	}
+	
+	public Trajectory createTrajectory() {
+		double timestep = Double.parseDouble(inputTimestep.getText());
+		double maxV = Double.parseDouble(inputMaxV.getText());
+		double maxA = Double.parseDouble(inputMaxA.getText());
+		 
+		Waypoint[] test = new Waypoint[waypoints.size()];
+		test = waypoints.toArray(test);
+		 
+		return RoboHound_Trajectory.generateTrajectory(test, timestep, maxV, maxA);
 	}
 	
 }
