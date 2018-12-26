@@ -63,6 +63,10 @@ public class Spline {
 		return Ax*t*t*t+Bx*t*t+Cx*t+Dx;
 	}
 	
+	public double getDx(double t) {
+		return 3*Ax*t*t+2*Bx*t+Cx;
+	}
+	
 	/**
 	 * @param t time
 	 * @return y position at a given time
@@ -71,14 +75,41 @@ public class Spline {
 		return Ay*t*t*t+By*t*t+Cy*t+Dy;
 	}
 	
+	public double getDy(double t) {
+		return 3*Ay*t*t+2*By*t+Cy;
+	}
+	
 	/**
 	 * @param t time
 	 * @return angle the wheels should be facing at a given time
 	 */
 	public double getHeading(double t) {
-		double headingX = 3*Ax*t*t+2*Bx*t+Cx;
-		double headingY = 3*Ay*t*t+2*Bx*t+Cx;
+		double headingX = getDx(t);
+		double headingY = getDy(t);
 		return Math.atan2(headingY, headingX);
+	}
+	
+	
+	private double n = 100;
+	public double getArcLength() {
+		double sum = 0;
+		for (int i = 1; i <= n; i++) {
+			sum += (i/n - (i-1)/n) * ((getTrapezoidSum((i-1)/n) + getTrapezoidSum(i/n)) / 2);
+					
+		}
+		return sum;
+	}
+	
+	private double getTrapezoidSum(double t) {
+		return Math.sqrt(getDx(t)*getDx(t) + getDy(t)*getDy(t));
+	}
+	
+	public static double getPathLength(Spline[] splines) {
+		double sum = 0;
+		for (Spline spline : splines) {
+			sum += spline.getArcLength();
+		}
+		return sum;
 	}
 
 }

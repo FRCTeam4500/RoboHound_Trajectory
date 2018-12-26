@@ -38,10 +38,16 @@ public class MotionProfile {
 			type = ProfileType.Trapezoidal;
 			t1 = vMax / aMax;
 			d1 = t1*vMax*0.5;
-			d3 = d2; 
+			d3 = (vMax*vMax) / (2*aMax);
 			d2 = distance - d1 - d3;
 			t2 = (d2 / vMax) + t1;
-			t3 = 2*t1+t2; 
+			t3 = (-vMax / -aMax) + t2; 
+//			t1 = vMax / aMax;
+//			d1 = t1*vMax*0.5;
+//			d3 = d2; 
+//			d2 = distance - d1 - d3;
+//			t2 = (d2 / vMax) + t1;
+//			t3 = 2*t1+t2; 
 		}
 		
 	}
