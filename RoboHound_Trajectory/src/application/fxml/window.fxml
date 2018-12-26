@@ -54,7 +54,7 @@
                                                       <Font size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField fx:id="inputTimestep" maxWidth="-Infinity" minWidth="-Infinity" onAction="#inputChanged" prefWidth="70.0" text="0.02" />
+                                                <TextField fx:id="inputTimestep" maxWidth="-Infinity" minWidth="-Infinity" onAction="#inputChanged" prefWidth="70.0" text="0.05" />
                                              </children>
                                           </HBox>
                                           <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="200.0">
@@ -67,7 +67,7 @@
                                                       <Insets right="10.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <TextField fx:id="inputMaxV" maxWidth="-Infinity" minWidth="-Infinity" onAction="#inputChanged" prefWidth="70.0" text="0" />
+                                                <TextField fx:id="inputMaxV" maxWidth="-Infinity" minWidth="-Infinity" onAction="#inputChanged" prefWidth="70.0" text="3" />
                                              </children>
                                           </HBox>
                                           <HBox alignment="CENTER" layoutX="10.0" layoutY="50.0" prefHeight="40.0" prefWidth="200.0">
@@ -80,7 +80,7 @@
                                                       <Insets right="10.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <TextField fx:id="inputMaxA" maxWidth="-Infinity" minWidth="-Infinity" onAction="#inputChanged" prefWidth="70.0" text="0" />
+                                                <TextField fx:id="inputMaxA" maxWidth="-Infinity" minWidth="-Infinity" onAction="#inputChanged" prefWidth="70.0" text="3" />
                                              </children>
                                           </HBox>
                                        </children>

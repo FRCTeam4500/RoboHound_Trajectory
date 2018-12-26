@@ -1,56 +1,35 @@
 package robohound_trajectory;
 
+/**
+ * Represents the entire motion the robot will perform<br>
+ * Made up of segments that are spaced by the elapsed time<br>
+ */
 public class Trajectory {
 	
+	/**
+	 * Contains the needed information for each point that the robot will follow
+	 */
 	public static class Segment {
-        public double dt, x, y, position, velocity, acceleration, jerk, heading;
+        public double dt, x, y, velocity, acceleration, heading;
 
-        // dt is timestep
-        // position is distance of x and y from start
         public Segment(double dt, double x, double y, double heading, double velocity, double acceleration) {
             this.dt = dt;
             this.x = x;
             this.y = y;
-//            this.position = position;
             this.velocity = velocity;
             this.acceleration = acceleration;
-//            this.jerk = jerk;
             this.heading = heading;
         }
-
-//        public Segment copy() {
-//            return new Segment(dt, x, y, position, velocity, acceleration, jerk, heading);
-//        }
-
-        public boolean equals(Segment seg) {
-            return  seg.dt == dt && seg.x == x && seg.y == y &&
-                    seg.position == position && seg.velocity == velocity &&
-                    seg.acceleration == acceleration && seg.jerk == jerk && seg.heading == heading;
-        }
-
-        public boolean fuzzyEquals(Segment seg) {
-            return  ae(seg.dt, dt) && ae(seg.x, x) && ae(seg.y, y) && ae(seg.position, position) &&
-                    ae(seg.velocity, velocity) && ae(seg.acceleration, acceleration) && ae(seg.jerk, jerk) &&
-                    ae(seg.heading, heading);
-        }
-
-        private boolean ae(double one, double two) {
-            return Math.abs(one - two) < 0.0001;        // Really small value
-        }
-    }
-
-    /**
-     * The Fit Method defines the function by which the trajectory path is generated. By default, the HERMITE_CUBIC method
-     * is used.
-     */
-    public static enum FitMethod {
-        HERMITE_CUBIC, HERMITE_QUINTIC;
     }
 
     public Segment[] segments;
-    public TrapezoidalProfile profile;
-
-    public Trajectory(Segment[] segments, TrapezoidalProfile profile) {
+    public MotionProfile profile;
+    
+    /**
+     * @param segments the needed information for each point that the robot will follow
+     * @param profile the profile used to find the desired velocity and accelerations (the information is already filled in the segments but is still passed to the constructor so it can be used by the GUI later)
+     */
+    public Trajectory(Segment[] segments, MotionProfile profile) {
         this.segments = segments;
         this.profile = profile;
     }
@@ -66,12 +45,4 @@ public class Trajectory {
     public int length() {
         return segments.length;
     }
-
-//    public Trajectory copy() {
-//        Trajectory toCopy = new Trajectory(length());
-//        for (int i = 0; i < length(); i++) {
-//            toCopy.segments[i] = get(i).copy();
-//        }
-//        return toCopy;
-//    }
 }

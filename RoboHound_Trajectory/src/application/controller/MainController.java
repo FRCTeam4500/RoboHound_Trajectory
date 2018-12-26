@@ -96,10 +96,12 @@ public class MainController {
 	public void deleteClicked() {
 		int selected = waypointTable.getSelectionModel().getSelectedIndex();
 		
-		waypointList.remove(selected);
-		waypoints.remove(selected);
-		updateXYChart();
-		updateVTChart();
+		if (selected >= 0) {
+			waypointList.remove(selected);
+			waypoints.remove(selected);
+			updateXYChart();
+			updateVTChart();	
+		}
 	}
 	
 	public void clearClicked() {
@@ -172,7 +174,7 @@ public class MainController {
 				 XYChart.Series<Double, Double> sourceSeries = SeriesFactory.buildPositionSeries(traj);
 				 posData.add(sourceSeries);
 				 
-				 int waypointLength = (int) Math.ceil(traj.profile.getTFinal() / timestep);
+				 int waypointLength = (int) Math.ceil(traj.profile.getFinalTime() / timestep);
 				 int i = 0;
 				 for (XYChart.Data<Double, Double> data : sourceSeries.getData()) {
 					 if (!((i+1) % waypointLength == 0 || i == 0)) {
@@ -199,7 +201,7 @@ public class MainController {
 			test = waypoints.toArray(test);
 			Trajectory traj = RoboHound_Trajectory.generateTrajectory(test, timestep, maxV, maxA);
 			
-			chartVT_T.setUpperBound(traj.profile.getTFinal());
+			chartVT_T.setUpperBound(traj.profile.getFinalTime());
 			chartVT_V.setUpperBound(maxV);
 			//chartVT.setScaleY(maxV + 1);
 			//chartVT.setScaleX(traj.profile.getTFinal() + 1);
