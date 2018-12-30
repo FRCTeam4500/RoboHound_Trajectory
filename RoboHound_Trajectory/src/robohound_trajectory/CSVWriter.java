@@ -1,8 +1,9 @@
-package application.other;
+package robohound_trajectory;
 
 import java.awt.List;
 import java.io.FileWriter;
 import java.io.IOException;
+
 
 public class CSVWriter {
 	

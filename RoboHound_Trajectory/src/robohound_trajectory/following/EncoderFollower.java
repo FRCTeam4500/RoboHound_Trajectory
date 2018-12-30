@@ -59,7 +59,7 @@ public class EncoderFollower {
 		if (segmentIndex < traj.length()) {
 			Trajectory.Segment seg = traj.get(segmentIndex);
 			double err = seg.position - distanceCovered;
-			double calculatedValue = 0; // No idea...
+			double calculatedValue = kv*seg.velocity; // No idea...
 			lastErr = err;
 			heading = seg.heading;
 			segmentIndex++;

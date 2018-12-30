@@ -1,8 +1,12 @@
 package robohound_trajectory;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
-import application.other.CSVWriter;
 import robohound_trajectory.generating.MotionProfile;
 import robohound_trajectory.generating.Spline;
 import robohound_trajectory.generating.Trajectory;
@@ -82,6 +86,28 @@ public class RoboHound_Trajectory {
 	public static void exportToCSV(Waypoint[] waypoints, double timestep, double vMax, double aMax, String path) throws IOException {
 		Trajectory traj = generateTrajectory(waypoints, timestep, vMax, aMax);
 		exportToCSV(traj, path);
+	}
+	
+	private static boolean firstLine;
+	public static Trajectory readFromCSV(String path) throws IOException {
+		firstLine = true;
+		ArrayList<Trajectory.Segment> segments = new ArrayList<>();
+		try (Stream<String> stream = Files.lines(Paths.get(path))) {
+			stream.forEach((line) -> {
+	        	if (!firstLine) {
+	        		String[] parameters = line.split(",");
+	        		double[] nums = Arrays.stream(parameters)
+	                        .mapToDouble(Double::parseDouble)
+	                        .toArray();
+	        		segments.add(new Trajectory.Segment(nums[0], nums[1], nums[2], nums[3], nums[4], nums[5], nums[6]));
+	        		
+	        	}
+	        	firstLine = false;
+	        });
+	        Trajectory.Segment[] segArray = new Trajectory.Segment[segments.size()]	;	
+	        segArray = segments.toArray(segArray);
+	        return new Trajectory(segArray, null);
+		}
 	}
 
 }
