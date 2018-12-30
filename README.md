@@ -8,3 +8,6 @@ RoboHound Trajectory is 4500's custom motion profiling API. It was heavily inspi
 # TODO
 * Generate a seperate path for each module
 * Write code for the PIDVA + Gyro loop.
+
+# Creating Your Own Paths
+Navigate to releases and download the jar.
