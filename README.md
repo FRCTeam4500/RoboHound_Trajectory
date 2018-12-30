@@ -4,3 +4,7 @@ RoboHound Trajectory is 4500's custom motion profiling API. It was heavily inspi
 # Directories 
 * **src/application** contains all of the code for the GUI (which uses JavaFX)
 * **src/robohound_trajectory** contains the code for generating a path
+
+# TODO
+* Generate a seperate path for each module
+* Write code for the PIDVA + Gyro loop.
