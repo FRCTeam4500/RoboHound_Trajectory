@@ -210,11 +210,15 @@ public class MainController {
 			test = waypoints.toArray(test);
 			Trajectory traj = RoboHound_Trajectory.generateTrajectory(test, timestep, maxV, maxA);
 			
+			maxV = traj.profile.getMaxVelocity();
 			chartVT_T.setUpperBound(traj.profile.getFinalTime() + .05*traj.profile.getFinalTime());
 			chartVT_V.setUpperBound(maxV + .05*maxV);
 			
 			XYChart.Series<Double, Double> sourceSeries = SeriesFactory.buildVelocitySeries(traj);
 			chartVT.getData().add(sourceSeries);
+			for (XYChart.Data<Double, Double> data : sourceSeries.getData()) {
+				 data.getNode().setVisible(false);
+			 }
 		}
 	}
 	

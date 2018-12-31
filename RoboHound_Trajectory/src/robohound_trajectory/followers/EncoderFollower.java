@@ -66,7 +66,10 @@ public class EncoderFollower {
 		if (segmentIndex < traj.length()) {
 			Trajectory.Segment seg = traj.get(segmentIndex);
 			double err = seg.position - distanceCovered;
-			double calculatedValue = kv*seg.velocity; // No idea...
+			double calculatedValue = 
+					(kv*seg.velocity + ka*seg.acceleration) +
+					kp * err +
+					kd * ((err - lastErr) / seg.dt);
 			lastErr = err;
 			heading = seg.heading;
 			segmentIndex++;
@@ -76,8 +79,21 @@ public class EncoderFollower {
 		return 0;
 	}
 	
+	/**
+	 * 
+	 * @return heading the robot should be facing with no adjustments made
+	 */
 	public double getHeading() {
         return heading;
+    }
+	
+	/**
+	 * 
+	 * @param gyro the reading of the gyro in DEGREES
+	 * @return heading the robot should be facing with adjustments made
+	 */
+	public double getHeading(double gyro) {
+        return heading-gyro;
     }
 	
 	/**

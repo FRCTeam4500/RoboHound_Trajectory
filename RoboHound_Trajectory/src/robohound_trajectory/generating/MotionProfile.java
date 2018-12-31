@@ -1,5 +1,7 @@
 package robohound_trajectory.generating;
 
+
+
 /**
  * Generates the trapezoidal (or triangular) motion profile and allows you to find the velocity and acceleration at a given time.
  * If the robot can reach can reach it's maximum velocity within the given time, a trapezoidal profile is used. If there isn't enough time,
@@ -28,20 +30,38 @@ public class MotionProfile {
 		this.vMax = vMax;
 		this.aMax = aMax;
 		
-		double maxPosition = (vMax*vMax) / aMax;
-		if (maxPosition >= distance) {
-			type = ProfileType.Triangular;
-			t1 = Math.sqrt(distance / aMax);
-			t2 = 2*t1;
-			this.vMax = aMax*t1;
-		} else {
+//		double maxPosition = (vMax*vMax) / aMax;
+//		if (maxPosition >= distance) {
+//			type = ProfileType.Triangular;
+//			t1 = Math.sqrt(distance / aMax);
+//			t2 = 2*t1;
+//			this.vMax = aMax*t1;
+//		} else {
+//			type = ProfileType.Trapezoidal;
+//			t1 = vMax / aMax;
+//			d1 = t1*vMax*0.5;
+//			d3 = (vMax*vMax) / (2*aMax);
+//			d2 = distance - d1 - d3;
+//			t2 = (d2 / vMax) + t1;
+//			t3 = (-vMax / -aMax) + t2; 
+//		}
+		if ((vMax*vMax) / aMax < distance) {
 			type = ProfileType.Trapezoidal;
+			t0 = 0;
+            t1 = vMax / aMax;
+            d1 = (vMax / 2.0) * t1;
+            d3 = (vMax*vMax) / (2.0 * aMax);
+            d2 = distance - d1 - d3;
+            t2 = (d2 / vMax) + t1;
+            t3 = (vMax / aMax) + t2;
+		} else {
+			type = ProfileType.Triangular;
+			vMax = Math.sqrt(aMax * distance) / 2.0;
+			this.vMax = vMax;
+			t0 = 0;
 			t1 = vMax / aMax;
-			d1 = t1*vMax*0.5;
-			d3 = (vMax*vMax) / (2*aMax);
-			d2 = distance - d1 - d3;
-			t2 = (d2 / vMax) + t1;
-			t3 = (-vMax / -aMax) + t2; 
+			t2 = (vMax / aMax) + t1;
+			System.out.println(vMax);
 		}
 		
 	}
@@ -113,6 +133,10 @@ public class MotionProfile {
 	 */
 	public double getFinalTime() {
 		return (type == ProfileType.Trapezoidal) ? t3 : t2;
+	}
+	
+	public double getMaxVelocity() {
+		return vMax;
 	}
 
 }

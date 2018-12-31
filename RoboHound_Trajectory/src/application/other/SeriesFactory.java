@@ -21,11 +21,21 @@ public class SeriesFactory {
 	public static XYChart.Series<Double, Double> buildVelocitySeries(Trajectory t) {
         XYChart.Series<Double, Double> series = new XYChart.Series<>();
 
-        for (int i = 0; i < t.segments.length; i++) {
+//        for (int i = 0; i < t.segments.length; i++) {
+//            XYChart.Data<Double, Double> data = new XYChart.Data<>();
+//
+//            data.setXValue(t.get(i).dt * i);
+//            data.setYValue(t.get(i).velocity);
+//
+//            series.getData().add(data);
+//        }
+        
+        int tFinal = (int) Math.ceil(t.profile.getFinalTime());
+        for (double	i = 0; i < tFinal; i += 0.01) {
             XYChart.Data<Double, Double> data = new XYChart.Data<>();
 
-            data.setXValue(t.get(i).dt * i);
-            data.setYValue(t.get(i).velocity);
+            data.setXValue(i);
+            data.setYValue(t.profile.getVelocity(i));
 
             series.getData().add(data);
         }
