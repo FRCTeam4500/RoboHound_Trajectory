@@ -1,6 +1,6 @@
 package robohound_trajectory.generating;
 
-import robohound_trajectory.RobotMath;
+import robohound_trajectory.other.RobotMath;
 import robohound_trajectory.position.Waypoint;
 
 /**
@@ -63,7 +63,7 @@ public class Spline {
 	public double getX(double t) {
 		return Ax*t*t*t+Bx*t*t+Cx*t+Dx;
 	}
-	
+
 	public double getDx(double t) {
 		return 3*Ax*t*t+2*Bx*t+Cx;
 	}
@@ -75,7 +75,7 @@ public class Spline {
 	public double getY(double t) {
 		return Ay*t*t*t+By*t*t+Cy*t+Dy;
 	}
-	
+
 	public double getDy(double t) {
 		return 3*Ay*t*t+2*By*t+Cy;
 	}
@@ -92,6 +92,13 @@ public class Spline {
 		return Math.atan2(headingY, headingX);
 	}
 	
+	
+	/**
+	 * Gets the length of the spline through a TSum approximation
+	 * @param a
+	 * @param b
+	 * @return length of the spline
+	 */
 	public double getArcLength(double a, double b) {
 		double deltaX = (b-a) / n;
 		double xOf0 = getTrapezoidSum(a);
@@ -103,10 +110,20 @@ public class Spline {
 		return deltaX/2 * (xOf0 + sum + xOfn);
 	}
 	
+	/**
+	 * Integrand that came from the equation for the arc length of a parametric
+	 * @param t time
+	 * @return f(t)
+	 */
 	private double getTrapezoidSum(double t) {
 		return Math.sqrt(getDx(t)*getDx(t) + getDy(t)*getDy(t));
 	}
 	
+	/**
+	 * Gets the total length of multiple splines
+	 * @param splines
+	 * @return total distance that the robot should travel
+	 */
 	public static double getPathLength(Spline[] splines) {
 		double sum = 0;
 		for (Spline spline : splines) {

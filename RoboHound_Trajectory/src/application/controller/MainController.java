@@ -30,8 +30,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.util.converter.DoubleStringConverter;
 import robohound_trajectory.RoboHound_Trajectory;
-import robohound_trajectory.RobotMath;
 import robohound_trajectory.generating.Trajectory;
+import robohound_trajectory.other.RobotMath;
 import robohound_trajectory.position.Waypoint;
 
 public class MainController {

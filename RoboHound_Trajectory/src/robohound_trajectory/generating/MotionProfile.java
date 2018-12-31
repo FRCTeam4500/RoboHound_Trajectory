@@ -7,10 +7,6 @@ package robohound_trajectory.generating;
  */
 public class MotionProfile {
 	
-	// 0 0 0
-	// 5 0 0
-	// 7 2 20
-	
 	private double t0 = 0, t1, t2, t3, d1, d2, d3;
 	private double distance, vMax, aMax;
 	private ProfileType type;
@@ -36,7 +32,7 @@ public class MotionProfile {
 		if (maxPosition >= distance) {
 			type = ProfileType.Triangular;
 			t1 = Math.sqrt(distance / aMax);
-			t2 = 2*t1; // correct?
+			t2 = 2*t1;
 			this.vMax = aMax*t1;
 		} else {
 			type = ProfileType.Trapezoidal;
@@ -46,12 +42,6 @@ public class MotionProfile {
 			d2 = distance - d1 - d3;
 			t2 = (d2 / vMax) + t1;
 			t3 = (-vMax / -aMax) + t2; 
-//			t1 = vMax / aMax;
-//			d1 = t1*vMax*0.5;
-//			d3 = d2; 
-//			d2 = distance - d1 - d3;
-//			t2 = (d2 / vMax) + t1;
-//			t3 = 2*t1+t2; 
 		}
 		
 	}
@@ -101,7 +91,7 @@ public class MotionProfile {
 				return aMax;
 			} else if (t >= t1 && t <= t2) { // cruise phase
 				return 0;
-			} else if (t > t2 && t <= t3) { // deccelerating phase
+			} else if (t > t2 && t <= t3) { // decelerating phase
 				return -aMax;
 			}
 			return 0;

@@ -1,4 +1,4 @@
-package robohound_trajectory.following;
+package robohound_trajectory.followers;
 
 import robohound_trajectory.generating.Trajectory;
 
@@ -35,10 +35,10 @@ public class EncoderFollower {
 	
 	/**
      * Configure the Encoders being used in the follower.
-     * @param initial_position      The initial 'offset' of your encoder. This should be set to the encoder value just
+     * @param initialPos      The initial 'offset' of your encoder. This should be set to the encoder value just
      *                              before you start to track
-     * @param ticks_per_revolution  How many ticks per revolution the encoder has
-     * @param wheel_diameter        The diameter of your wheels (or pulleys for track systems) in meters
+     * @param ticksPerRevolution  How many ticks per revolution the encoder has
+     * @param wheelDiameter        The diameter of your wheels (or pulleys for track systems) in meters
      */
 	public void configureEncoder(int initialPos, int ticksPerRev, double wheelDiameter) {
 		encoderOffset = initialPos;
@@ -53,6 +53,13 @@ public class EncoderFollower {
         lastErr = 0; segmentIndex = 0;
     }
 	
+    /**
+     * Calculate the desired output for the motors, based on the amount of ticks the encoder has gone through.
+     * This does not account for heading of the robot. To account for heading, add some extra terms in your control
+     * loop for realignment based on gyroscope input and the desired heading given by this object.
+     * @param encoderTick The amount of ticks the encoder has currently measured.
+     * @return             The desired output for your motor controller
+     */
 	public double calculate(int encoderTick) {
 		double distanceCovered = ((encoderTick - encoderOffset) / encoderTickCount) * wheelCircumference;
 		
@@ -73,12 +80,20 @@ public class EncoderFollower {
         return heading;
     }
 	
-	 public Trajectory.Segment getSegment() {
-		 return traj.get(segmentIndex);
-	 }
+	/**
+	 * 
+	 * @return segment currently being analyzed
+	 */
+	public Trajectory.Segment getSegment() {
+		return traj.get(segmentIndex);
+	}
 	 
-	 public boolean isFinished() {
-		 return segmentIndex >= traj.length();
-	 }
+	/**
+	 * Returns true if the follower is done following the path
+	 * @return if the follower has finished following the path
+	 */
+	public boolean isFinished() {
+		return segmentIndex >= traj.length();
+	}
 
 }

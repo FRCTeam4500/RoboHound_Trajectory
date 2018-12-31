@@ -1,4 +1,4 @@
-package robohound_trajectory;
+package robohound_trajectory.other;
 
 public class RobotMath {
 	
